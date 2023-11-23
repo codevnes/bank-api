@@ -1,7 +1,5 @@
 const express = require('express');
 const axios = require('axios');
-const HttpAgent = require('http').Agent;
-const HttpsAgent = require('https').Agent;
 const AcbAccountModel = require('./account');
 const router = express.Router();
 
@@ -36,7 +34,6 @@ class ACBService {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
-                    // Other headers as needed...
                 },
             });
             return response.data;
@@ -46,7 +43,7 @@ class ACBService {
     }
 }
 
-const clientId = process.env.ACB_CLIENT_ID; // Use environment variable for clientId
+const clientId = process.env.ACB_CLIENT_ID; 
 const acbService = new ACBService(clientId);
 
 router.post('/login', async (req, res, next) => {
@@ -64,7 +61,7 @@ router.post('/login', async (req, res, next) => {
             acbAccount = await AcbAccountModel.create({ username, password, accountNo, accessToken: authToken.accessToken });
         }
 
-        res.json({ status: true, message: 'Login successful', authToken });
+        res.json({ status: true, message: 'Login successful' });
     } catch (error) {
         next(error);
     }
