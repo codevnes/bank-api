@@ -86,6 +86,14 @@ router.post('/transactions', async (req, res, next) => {
     }
 });
 
+
+router.get('/', (req, res, next) => {
+
+    res.json({ status: true, message: 'Xin chao ACB' });
+
+});
+
+
 router.use((error, req, res, next) => {
     res.status(500).json({ status: false, message: error.message });
 });
