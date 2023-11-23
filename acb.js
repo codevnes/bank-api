@@ -49,7 +49,7 @@ class ACBService {
 const clientId = process.env.ACB_CLIENT_ID; // Use environment variable for clientId
 const acbService = new ACBService(clientId);
 
-router.post('/account', async (req, res, next) => {
+router.get('/account', async (req, res, next) => {
     const { accountNo, username, password } = req.body;
 
     try {
@@ -70,7 +70,7 @@ router.post('/account', async (req, res, next) => {
     }
 });
 
-router.post('/transactions', async (req, res, next) => {
+router.get('/transactions', async (req, res, next) => {
     const { accountNo, rows } = req.body;
     const acbAccount = await AcbAccountModel.findOne({ accountNo });
 
