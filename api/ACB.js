@@ -1,6 +1,6 @@
 const express = require('express');
 const axios = require('axios');
-const AcbAccountModel = require('./account');
+const AcbAccountModel = require('../account');
 const router = express.Router();
 
 const API_ENDPOINTS = {
