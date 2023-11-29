@@ -24,7 +24,7 @@ class ACBService {
             });
             return response.data;
         } catch (error) {
-            throw new Error(error.response.data.message || 'Login failed');
+            return error;
         }
     }
 
@@ -61,15 +61,17 @@ router.post('/login', async (req, res, next) => {
             acbAccount = await AcbAccountModel.create({ username, password, accountNo, accessToken: authToken.accessToken });
         }
 
-        res.json({ status: true, message: 'Login successful' });
+        res.json({ status: true, message: 'Login successful',authToken });
     } catch (error) {
-        next(error);
+        res.json(error);
     }
 });
 
 router.post('/transactions', async (req, res, next) => {
     const { accountNo, rows } = req.body;
-    const acbAccount = await AcbAccountModel.findOne({ accountNo });
+    
+    console.log('transactions', accountNo);
+    let acbAccount = await AcbAccountModel.findOne({ accountNo });
 
     if (!acbAccount) {
         return next(new Error('Account not found'));
@@ -79,9 +81,19 @@ router.post('/transactions', async (req, res, next) => {
         const transactionData = await acbService.getTransactionHistory(accountNo, rows, acbAccount.accessToken);
         res.json(transactionData);
     } catch (error) {
-        next(error);
+        try {
+            const { username, password } = acbAccount;
+            const authToken = await acbService.login(username, password);
+            acbAccount.accessToken = authToken.accessToken;
+            await acbAccount.save();
+            const transactionData = await acbService.getTransactionHistory(accountNo, rows, authToken.accessToken);
+            res.json(transactionData);
+        } catch (loginError) {
+            next(loginError);
+        }
     }
 });
+
 
 
 router.get('/', (req, res, next) => {

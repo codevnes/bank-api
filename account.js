@@ -1,18 +1,28 @@
 const mongoose = require('mongoose');
-require('dotenv').config();
-
-mongoose.connect(process.env.MONGOOSE_URL);
-
 const Schema = mongoose.Schema;
+
 const ACBAccountsSchema = new Schema({
   username: String,
   password: String,
   accountNo: String,
   accessToken: String,
 }, {
-  collection: 'AcbAccounts' 
+  collection: 'AcbAccounts'
 });
 
 const AcbAccountModel = mongoose.model('AcbAccounts', ACBAccountsSchema);
 
-module.exports = AcbAccountModel;
+const MBAccountsSchema = new Schema({
+  username:         String,
+  password:         String,
+  accountNo:        String,
+  refNo:            String,
+  deviceIdCommon:   String,
+  sessionId:        String,
+}, {
+  collection: 'MbAccounts'
+});
+
+const MbAccountModel = mongoose.model('MbAccounts', MBAccountsSchema);
+
+module.exports = { AcbAccountModel, MbAccountModel };
